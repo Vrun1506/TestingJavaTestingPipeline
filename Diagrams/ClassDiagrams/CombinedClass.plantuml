@@ -1,0 +1,110 @@
+
+@startuml RoomManager
+
+class RoomManager {
+    - startingRoom: Room
+    - currentRoom: Room
+    - doors: Door[4]
+    + initialiseMap()
+    + changeRoom(direction: DoorDirection)
+    - unloadCurrentRoom()
+    - initialiseDoors()
+    - updateDoors()
+    - updateEventIndicators()
+}
+
+class Room {
+    + roomManager: RoomManager
+    + event: Event
+    + adjacentRooms: Room[4]
+    + getEventType(): EventType
+    + start()
+}
+
+class Door {
+    + enabled: boolean
+    + roomManager: RoomManager
+    + direction: DoorDirection
+    + interact()
+}
+
+note right of Door
+Persistent object.
+Visibility toggled per room.
+end note
+
+class EventType
+
+enum DoorDirection {
+    NORTH = 0
+    EAST = 1
+    SOUTH = 2
+    WEST = 3
+}
+
+RoomManager "1" *-- "1..*" Room : manages >
+RoomManager "1" *-- "4" Door : controls >
+Room "1" --> "1" RoomManager
+Door "1" --> "1" RoomManager
+Room "1..4" -- "1..4" Room : adjacentRooms
+Room "1" *-- "0..1" Event : owns >
+Door "1" --> "1" DoorDirection : has >
+
+class Player {
+    - startPos : int[2]
+    - pos : int[2]
+    - speed : int
+    + setPos(int[2] pos)
+    + setSpeed(int speed)
+    + getPos()
+    + move(playerMove)
+}
+
+class Event {
+    - eventID : String
+    - roomNum : int
+    - eventFinished : Boolean
+    + generateRoomNum()
+    + getRoom()
+    + getID()
+    + isFinished()
+    + updateTimer(int time)
+    + updateScore(int score)
+    + updatePlayerSpeed(int speed)
+    + updatePlayerPosition(int[2] pos)
+    + removeEvent(eventFinished)
+}
+
+class Positive {
+    + {abstract} rewardPlayer()
+}
+
+class Hidden {
+    + eventTriggered : Boolean
+    + {abstract} displayEvent(eventTriggered)
+}
+
+class Negative {
+    + {abstract} delayPlayer()
+}
+
+enum PlayerMove {
+    W = player.up
+    A = player.left
+    S = player.down
+    D = player.right
+}
+
+Note right of Event
+Each subclass contains abstract method
+to be implemented for each instatiation,
+using superclass methods.
+end note
+
+Event <|--- Positive : extends
+Event <|--- Hidden : extends
+Event <|--- Negative : extends
+Event -- Player : updates
+Player *-- PlayerMove : has
+
+@enduml
