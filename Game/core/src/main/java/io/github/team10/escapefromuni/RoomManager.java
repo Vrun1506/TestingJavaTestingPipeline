@@ -45,19 +45,24 @@ public class RoomManager {
         roomTextures.put("room3", new Texture("RoomsTemp3.png"));
 
         // Iniitalise all the rooms
+        // TODO: Update room textures, and add more rooms.
         Room room1 = new Room(roomTextures.get("room1"));
         Room room2 = new Room(roomTextures.get("room2"));
         Room room3 = new Room(roomTextures.get("room3"));
+        Room room4 = new Room(roomTextures.get("room1"));
 
         // Initialise connections - remember both ways.
         room1.addAdjacent(room2, DoorDirection.EAST);
         room2.addAdjacent(room1, DoorDirection.WEST);
         room2.addAdjacent(room3, DoorDirection.NORTH);
         room3.addAdjacent(room2, DoorDirection.SOUTH);
+        room2.addAdjacent(room4, DoorDirection.EAST);
+        room4.addAdjacent(room2, DoorDirection.WEST);
 
         // Initialise Events
         room2.setEvent(new EventLongboi(player, game));
         room3.setEvent(new EventGreggs(player, game));
+        room4.setEvent(new EventTHE3(player, game));
 
         currentRoom = room1;
         updateDoors(currentRoom);
