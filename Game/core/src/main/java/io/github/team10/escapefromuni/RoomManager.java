@@ -44,17 +44,19 @@ public class RoomManager {
         initialiseDoors();
 
         // Store room textures in list for easy access and disposal.
-        roomTextures.put("room1", new Texture("RoomsTemp1.png"));
-        roomTextures.put("room2", new Texture("RoomsTemp2.png"));
-        roomTextures.put("room3", new Texture("RoomsTemp3.png"));
+        roomTextures.put("room1", new Texture("Room1.png"));
+        roomTextures.put("room2", new Texture("Room5.png"));
+        roomTextures.put("room3", new Texture("Room4.png"));
+        roomTextures.put("room4", new Texture("Room3.png"));
+        roomTextures.put("room5", new Texture("Room2.png"));
 
         // Iniitalise all the rooms
         // TODO: Update room textures, and add more rooms.
         Room room1 = new Room(roomTextures.get("room1"));
         Room room2 = new Room(roomTextures.get("room2"));
         Room room3 = new Room(roomTextures.get("room3"));
-        Room room4 = new Room(roomTextures.get("room1"));
-        Room room5 = new Room(roomTextures.get("room2"), true);
+        Room room4 = new Room(roomTextures.get("room4"));
+        Room room5 = new Room(roomTextures.get("room5"), true);
 
         // Initialise connections - remember both ways.
         room1.addAdjacent(room2, DoorDirection.EAST);
