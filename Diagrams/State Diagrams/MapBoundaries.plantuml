@@ -1,0 +1,28 @@
+@startuml MapBoundaries
+
+skinparam MaxMessageSize 100
+
+[*] --> PlayerInMap : Player sprite is spawned in
+
+
+state PlayerInMap {
+    FreeMovement : Player can move using WASD.
+    OutOfBoundsLeft : A stops responding.
+    OutOfBoundsRight : D stops responding.
+    OutOfBoundsTop : W stops responding.
+    OutOfBoundsBottom : S stops responding.
+
+    [*] -> FreeMovement
+
+    FreeMovement --> OutOfBoundsLeft : Player reaches left boundary
+    FreeMovement --> OutOfBoundsRight : Player reaches right boundary
+    FreeMovement --> OutOfBoundsTop : Player reaches top boundary
+    FreeMovement --> OutOfBoundsBottom : Player reaches bottom boundary
+
+    OutOfBoundsLeft --> FreeMovement : Player moves right
+    OutOfBoundsRight --> FreeMovement : Player moves left
+    OutOfBoundsTop --> FreeMovement : Player moves down
+    OutOfBoundsBottom --> FreeMovement : Player moves up
+}
+
+@enduml

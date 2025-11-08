@@ -1,0 +1,12 @@
+@startuml PlayerLoses
+
+skinparam MaxMessageSize 100
+
+[*] --> PlayerInGame
+PlayerInGame : Player is at arbritary point in the game
+PlayerInGame --> PlayerInGame : ScoreManager checks timer > 0
+PlayerInGame --> EndGameScreen : ScoreManager updates RoomManager if timer == 0
+EndGameScreen : Screen displayed when game is over,
+EndGameScreen : may show dean as game over.
+
+@enduml

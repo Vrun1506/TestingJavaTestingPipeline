@@ -1,0 +1,56 @@
+@startuml GameStart
+
+skinparam MaxMessageSize 100
+
+[*] --> MainMenu : Game Starts
+
+state MainMenu {
+    [*] -> IdleDisplay : GUI initialised
+    IdleDisplay : Menu displays when game is
+    IdleDisplay : started and player is idle.
+}
+
+state TutorialScreen {
+    [*] -> LoadImage
+    LoadImage : Tutorial image, displaying
+    LoadImage : how to play, is loaded.
+}
+
+state SettingsMenu {
+    [*] -> MainSettings
+    MainSettings -> MainSettings : Audio is adjusted
+    MainSettings : Settings screen initialised.
+}
+
+state GameState {
+    [*] -> NoEvent
+    state NoEvent {
+        [*] -> FirstRoom
+        FirstRoom -> NoEventRoom : Player enters new room
+        FirstRoom : First room initialised
+        FirstRoom : always with no event.
+        NoEventRoom : Standard room no event.
+    }
+
+    state Event {
+        [*] -> EventActive : Event is initialised
+        EventActive -> EventFinished : Player takes steps to complete event
+        EventActive : Event has started
+        EventFinished : Event is over
+
+    }
+}
+
+FirstRoom --> Event : Player enters new room
+NoEventRoom --> Event : Player enters new room
+NoEventRoom --> NoEventRoom : Player enters new room
+EventFinished --> NoEventRoom : Player enters new room
+
+
+IdleDisplay --> TutorialScreen : Player selects tutorial button
+LoadImage --> IdleDisplay : Player exits tutorial screen
+IdleDisplay --> SettingsMenu : Player selects settings button
+MainSettings --> IdleDisplay : Player exits settings screen
+IdleDisplay --> GameState : Player selects start game
+GameState --> IdleDisplay : Player returns to main menu
+@enduml

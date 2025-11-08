@@ -1,0 +1,31 @@
+@startuml Component Overview
+
+node "Menu Components" {
+    [Main Menu]
+    [Pause Menu]
+    [Settings Menu]
+    [Tutorial Menu]
+}
+
+node "Game Managers" {
+    [Room Manager]
+    [Score Manager]
+    [Audio Manager]
+}
+
+[Main Menu] --> [Tutorial Menu] : Accesses
+[Main Menu] --> [Settings Menu] : Accesses
+[Settings Menu] --> [Main Menu] : Returns to
+[Tutorial Menu] --> [Main Menu] : Returns to
+[Pause Menu] --> [Settings Menu] : Accesses
+[Settings Menu] --> [Pause Menu] : Returns to
+[Main Menu] --> [Room Manager] : Initialises game
+[Settings Menu] --> [Audio Manager] : Gives commands to
+[Pause Menu] --> [Room Manager] : Resumes game
+
+[Room Manager] --> [Score Manager] : Updates score
+[Room Manager] --> [Room Manager] : Manages and assgins events
+[Room Manager] --> [Pause Menu] : Pauses game
+[Room Manager] --> [Audio Manager] : Changes audio
+
+@enduml
