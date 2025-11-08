@@ -1,0 +1,40 @@
+@startuml ScoreManagerAndTimer
+
+class ScoreManager {
+    -Timer : Timer 
+    -Events : Events
+    -FinalScore : FinalScore 
+    +StartGame()
+    +EndGame()
+    +RecordEvent(Event)
+    +CalculateFinalScore()
+    +Reset()
+}
+
+class FinalScore {
+    -TimeScore : int
+    -EventScore : int
+    -TotalScore : int
+    +calculate(time : float, EventsScoreSum : int)
+}
+
+class Timer {
+    -StartTimer : float
+    -EndTimer : float
+    +start()
+    +stop()
+    +getElapsedTime()
+
+}
+
+class Event {
+
+}
+
+
+Event -- ScoreManager : updates
+ScoreManager "1" *-- "1..*" FinalScore : manages >
+ScoreManager "1" *-- "4" Timer : uses >
+
+
+@enduml

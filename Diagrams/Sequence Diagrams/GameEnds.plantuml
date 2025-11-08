@@ -1,0 +1,19 @@
+@startuml GameEnds
+
+autonumber
+skinparam MaxMessageSize 100
+
+Actor Player as P
+Participant roomManager as R
+Participant scoreManger as S
+Participant timer as T
+Participant finalScore as F
+
+P -> R : Player position leaves the final room.
+R -> S : Updates score manager that the game has ended.
+S -> T : Tells timer to stop counting.
+T -> S : Returns the final elapsed time.
+S -> F : Passes final time as parameter to calculate final score. (Also factors in event scores)
+F -> F : Final score is displayed to the screen.
+
+@enduml

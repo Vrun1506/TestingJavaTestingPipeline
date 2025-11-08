@@ -1,0 +1,41 @@
+@startuml PauseMenu
+
+autonumber
+skinparam MaxMessageSize 100
+
+Actor Player as P
+Participant roomManager as R
+Participant pauseMenu as M
+Participant timer as T
+Participant settingsPage as S
+Participant audioManager as A
+Participant audioClip as C
+
+group Pause Game
+    P -> R : Player presses ESC.
+    R -> M : Calls pauseMenu to pause the game.
+    M -> T : Pauses time and requests current time.
+    T -> M : Time is returned and displayed on pauseMenu.
+    M -> A : Tells audioManager to stop playing audio.
+    A -> C : Stops current audio clip.
+end group
+
+group Turn down audio
+    P -> M : Player navigates pause menu to the settings.
+    M -> S : Settings menu is called to be displayed.
+    P -> S : Player turns audio down.
+    S -> A : Requests to audioManager with level of decrease.
+    A -> C : Sets volume of the audio clip.
+end group
+
+group Resume Game
+    note over M
+        Resume game process is reverse of pause game so has been
+        abstracted for simplicity.
+    end note
+    P -> S : Player returns to main pause menu.
+    S -> M : Pause menu is called to be displayed.
+    P -> M : Player resumes game.
+end group
+
+@enduml
