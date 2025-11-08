@@ -24,9 +24,8 @@ public class GameOverScreen implements Screen {
         this.game = game;
         this.isWon = isWon;
         font = game.font;
-        // TODO: Update below with proper end screen images.
-        winScreen = new Texture("PossibleRoom1.png");
-        loseScreen = new Texture("PossibleRoom2.png");
+        winScreen = new Texture("WinScreen.png");
+        loseScreen = new Texture("LoseScreen.png");
         this.timer = timer;
         this.scoreManager = scoreManager;
     }
@@ -72,7 +71,7 @@ public class GameOverScreen implements Screen {
         // Draw time elapsed text
         layout.setText(game.font, timeText);
         float timeX = (uiWidth - layout.width) / 2f;
-        float timeY = uiHeight * 0.4f;
+        float timeY = uiHeight * 0.35f;
         game.font.draw(game.batch, layout, timeX, timeY);
 
         // Draw score text
