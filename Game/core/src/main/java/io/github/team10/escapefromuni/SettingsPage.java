@@ -44,7 +44,7 @@ public class SettingsPage implements Screen {
     @Override
     public void show() {
         // Load textures
-        backgroundImage = new Texture(Gdx.files.internal("settings_background.png"));
+        backgroundImage = new Texture(Gdx.files.internal("Settings_Background.png"));
         buttonTexture = new Texture(Gdx.files.internal("ButtonBG.png"));
         sliderBarTexture = new Texture(Gdx.files.internal("SliderBar.png"));
         sliderKnobTexture = new Texture(Gdx.files.internal("SliderKnob.png"));
