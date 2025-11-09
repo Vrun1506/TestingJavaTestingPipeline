@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 /**
- * Singleton AudioManager for handling all game audio.
+ * AudioManager for handling all game audio.
  * 
  * Manages background music for menus and gameplay, and sound effects
  * for events and button clicks.
@@ -17,18 +17,16 @@ public class AudioManager {
     private Music menuMusic;
     private Music gameMusic;
     
-    // Sound effects (short clips)
+    // Sound effects (played once when the even is triggered or button click)
     private Sound clickSound;
     private Sound negativeEventSound;
     private Sound positiveEventSound;
     private Sound hiddenEventSound;
     
-    // Current state tracking
+    
     private Music currentMusic;
     
-    /**
-     * Private constructor for singleton pattern.
-     */
+    
     private AudioManager() {
         loadAudio();
     }
@@ -44,12 +42,10 @@ public class AudioManager {
         return instance;
     }
     
-    /**
-     * Loads all audio assets.
-     */
+    // Loads all audio files
     private void loadAudio() {
         try {
-            // Load music tracks (use Music for long, looping audio)
+            // Load music tracks 
             menuMusic = Gdx.audio.newMusic(Gdx.files.internal("MenuMusic.mp3"));
             gameMusic = Gdx.audio.newMusic(Gdx.files.internal("GameMusic.mp3"));
             
@@ -57,7 +53,7 @@ public class AudioManager {
             menuMusic.setLooping(true);
             gameMusic.setLooping(true);
             
-            // Load sound effects (use Sound for short audio clips)
+            // Load sound effects
             clickSound = Gdx.audio.newSound(Gdx.files.internal("Click.mp3"));
             negativeEventSound = Gdx.audio.newSound(Gdx.files.internal("NegMus.mp3"));
             positiveEventSound = Gdx.audio.newSound(Gdx.files.internal("PosMus.mp3"));
@@ -68,9 +64,8 @@ public class AudioManager {
         }
     }
     
-    /**
-     * Plays menu music in a loop.
-     */
+    // Plays menu music
+
     public void playMenuMusic() {
         if (currentMusic != menuMusic) {
             stopCurrentMusic();
@@ -79,9 +74,7 @@ public class AudioManager {
         }
     }
     
-    /**
-     * Plays game music in a loop.
-     */
+    // Plyas game music
     public void playGameMusic() {
         if (currentMusic != gameMusic) {
             stopCurrentMusic();
@@ -111,40 +104,35 @@ public class AudioManager {
         }
         
         if (eventSound != null) {
-            eventSound.play(1.0f); // Play at full volume
+            eventSound.play(1.0f); 
         }
     }
     
-    /**
-     * Plays the button click sound effect.
-     */
+    //click sound effect
+
     public void playClickSound() {
         if (clickSound != null) {
-            clickSound.play(1.0f); // Play at full volume
+            clickSound.play(1.0f);
         }
     }
     
-    /**
-     * Stops the currently playing music.
-     */
+    // Stops the currently playing music
+     
     private void stopCurrentMusic() {
         if (currentMusic != null && currentMusic.isPlaying()) {
             currentMusic.stop();
         }
     }
     
-    /**
-     * Pauses the currently playing music.
-     */
+    //pauses the currently playing music
+
     public void pauseMusic() {
         if (currentMusic != null && currentMusic.isPlaying()) {
             currentMusic.pause();
         }
     }
     
-    /**
-     * Resumes the currently paused music.
-     */
+    //resumes the currently playing music
     public void resumeMusic() {
         if (currentMusic != null && !currentMusic.isPlaying()) {
             currentMusic.play();
@@ -167,10 +155,7 @@ public class AudioManager {
     public void setSoundVolume(float volume) {
         }
     
-    /**
-     * Disposes all audio resources.
-     * Call this when the game is closing.
-     */
+    // Disposes all audio 
     public void dispose() {
         // Dispose music
         if (menuMusic != null) menuMusic.dispose();
