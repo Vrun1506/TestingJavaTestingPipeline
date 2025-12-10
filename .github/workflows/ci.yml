@@ -2,33 +2,173 @@ name: Build and Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     defaults:
       run:
         working-directory: Game
-
+    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Set up Java 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: "17"
-        distribution: "temurin"
-
-    - name: Make gradlew executable
-      run: chmod +x gradlew
-
-    - name: Build with Gradle
-      run: ./gradlew build
-
-    - name: Run tests (optional)
-      run: ./gradlew test
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: 'gradle'
+          
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+        
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v2
+        
+      - name: Generate asset list
+        run: ./gradlew generateAssetList --no-daemon
+        
+      - name: Build with Gradle
+        run: ./gradlew build --no-daemon --stacktrace
+        
+      - name: Run tests
+        run: ./gradlew test --no-daemon --stacktrace
+        continue-on-error: false
+        
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            Game/core/build/reports/tests/
+            Game/lwjgl3/build/reports/tests/
+          retention-days: 30
+          if-no-files-found: ignore
+          
+      - name: Build desktop distribution JAR
+        run: ./gradlew lwjgl3:dist --no-daemon --stacktrace
+        
+      - name: Upload desktop JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: Escape_From_Uni-Desktop
+          path: Game/lwjgl3/build/libs/*.jar
+          retention-days: 30
+          
+      - name: List build outputs
+        if: always()
+        run: |
+          echo "LWJGL3 build outputs:"
+          ls -lh lwjgl3/build/libs/ || echo "No LWJGL3 JARs found"
+          
+      - name: Check for build warnings
+        run: ./gradlew compileJava --warning-mode=all --no-daemon
+        continue-on-error: true
+        
+      - name: Print build summary
+        if: always()
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Project: Escape From Uni" >> $GITHUB_STEP_SUMMARY
+          echo "- Java Version: 17 (source/target: 8)" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Backend: LWJGL3" >> $GITHUB_STEP_SUMMARY
+          
+  code-quality:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Game
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: 'gradle'
+          
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+        
+      - name: Check for common issues
+        run: |
+          echo "Checking for common code issues..."
+          ./gradlew compileJava --warning-mode=all --no-daemon || true
+          
+      - name: Verify asset files exist
+        run: |
+          echo "Checking for required assets..."
+          cd assets
+          for asset in MenuMusic.mp3 GameMusic.mp3 Click.mp3 NegMus.mp3 PosMus.mp3 HidMus.mp3 MalePlayer.png; do
+            if [ -f "$asset" ]; then
+              echo "✓ Found: $asset"
+            else
+              echo "✗ Missing: $asset"
+            fi
+          done
+        
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Game
+    
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: 'gradle'
+          
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+        
+      - name: Generate asset list
+        run: ./gradlew generateAssetList --no-daemon
+        
+      - name: Build desktop distribution
+        run: ./gradlew lwjgl3:dist --no-daemon
+        
+      - name: Get tag name
+        id: tag
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Game/lwjgl3/build/libs/*.jar
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          name: Escape From Uni ${{ steps.tag.outputs.TAG_NAME }}
+          body: |
+            ## Escape From Uni - Release ${{ steps.tag.outputs.TAG_NAME }}
+            
+            ### Download & Run
+            1. Download the JAR file below
+            2. Ensure you have Java 8+ installed
+            3. Run: `java -jar Escape_From_Uni-${{ steps.tag.outputs.TAG_NAME }}.jar`
+            
+            ### What's Changed
+            See below for auto-generated release notes.
