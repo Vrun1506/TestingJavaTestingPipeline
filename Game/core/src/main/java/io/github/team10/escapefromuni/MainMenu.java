@@ -40,7 +40,7 @@ public class MainMenu implements Screen {
 
     @Override
     public void show() {
-        // backgrouns
+        // backgrounds
         backgroundImage = new Texture(Gdx.files.internal("mainmenu_background.png"));
         buttonTexture = new Texture(Gdx.files.internal("ButtonBG.png"));
 
@@ -115,8 +115,6 @@ public class MainMenu implements Screen {
             game.uiViewport.unproject(touchPos);
 
             if (button.contains(touchPos.x, touchPos.y)) {
-                // play click audio
-                AudioManager.getInstance().playClickSound();
                 return true;
             }
         }

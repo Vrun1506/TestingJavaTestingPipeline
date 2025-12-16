@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.ScreenUtils;
-
 /**
  * Represents the Game Over screen, shown when the player either wins or loses.
  * Displays the appropriate background, score, and time information.
@@ -47,7 +46,6 @@ public class GameOverScreen implements Screen {
     public void render(float delta) {
         // Return to main menu if ESC pressed.
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            AudioManager.getInstance().playClickSound();
             game.setScreen(new MainMenu(game));
             dispose();
             return;

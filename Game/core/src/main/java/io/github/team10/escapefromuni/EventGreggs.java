@@ -3,16 +3,16 @@ package io.github.team10.escapefromuni;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Positive event where the player encounters a Greggs sausage roll.
- * 
- * When the player runs into the sausage roll, they gain a speed increase.
+ * * When the player runs into the sausage roll, they gain a speed increase.
  */
-public class EventGreggs extends Event {
+public class EventGreggs extends Event implements Disposable {
 
     private final Texture greggsTexture;
-    private Sprite greggsSprite;
+    public Sprite greggsSprite;
 
     private boolean used = false;
 
@@ -89,6 +89,10 @@ public class EventGreggs extends Event {
 
     @Override
     public void drawUI() {}
-    
+
+    // CHANGED: Added missing dispose method
+    @Override
+    public void dispose() {
+        if (greggsTexture != null) greggsTexture.dispose();
+    }
 }
- 

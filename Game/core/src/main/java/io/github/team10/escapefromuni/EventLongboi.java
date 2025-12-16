@@ -5,19 +5,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * A hidden event where the player encounters the Ghost of Longboi.
- * 
- * The event begins hidden (only outline is visible) and is revealed when the player approaches within a certain 
+ * * The event begins hidden (only outline is visible) and is revealed when the player approaches within a certain 
  * distance. Once revealed, Longboi appears and displays a dialogue panel.
  */
-public class EventLongboi extends Event {
+public class EventLongboi extends Event implements Disposable {
 
-    private boolean hidden = true;
+    public boolean hidden = true;
     private final Texture longboiHiddenTexture;
     private final Texture longboiTexture;
-    private Sprite longboiSprite;
+    
+    public Sprite longboiSprite;
+    
     private final Texture speechPanelTexture;
     private final Sprite speechPanelSprite;
 
@@ -50,6 +52,7 @@ public class EventLongboi extends Event {
     {
         if (!eventFinished && !hidden){
             eventFinished = true;
+            // Dispose called here manually in logic, but we also need a public dispose method for tests/cleanup
             longboiHiddenTexture.dispose();
             longboiTexture.dispose();
         }
@@ -125,5 +128,12 @@ public class EventLongboi extends Event {
             game.font.setColor(Color.BLACK);
             game.font.draw(game.batch, layout, textX, textY);
         }
+    }
+
+    @Override
+    public void dispose() {
+        if (longboiHiddenTexture != null) longboiHiddenTexture.dispose();
+        if (longboiTexture != null) longboiTexture.dispose();
+        if (speechPanelTexture != null) speechPanelTexture.dispose();
     }
 }

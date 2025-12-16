@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+
 /**
  * This class will deal with the 'main' game logic.
- * 
- * For example, creating the player, calling initialiseMap() on the RoomManager.
+ * * For example, creating the player, calling initialiseMap() on the RoomManager.
  * Will handle rendering of game textures using the SpriteBatch stored in EscapeGame. 
  */
 public class GameScreen extends ScreenAdapter {
@@ -21,7 +21,8 @@ public class GameScreen extends ScreenAdapter {
     Timer timer; 
 
     private final BitmapFont font;
-    private boolean isPaused;
+    
+    public boolean isPaused;
 
     public GameScreen(final EscapeGame game)
     {
@@ -70,8 +71,7 @@ public class GameScreen extends ScreenAdapter {
 
     /**
      * Performs game logic each frame. 
-     * 
-     * Always called before drawing textures.
+     * * Always called before drawing textures.
      * @param delta float representing the time since the last frame.
      */
     private void update(float delta)
@@ -89,7 +89,7 @@ public class GameScreen extends ScreenAdapter {
         ScreenUtils.clear(Color.BLACK);
         game.viewport.apply();
         game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-		game.batch.begin();
+        game.batch.begin();
 
         // World Rendering
         roomManager.drawMap();
@@ -124,4 +124,3 @@ public class GameScreen extends ScreenAdapter {
     @Override public void resume() {}
     @Override public void hide() {}
 }
-
